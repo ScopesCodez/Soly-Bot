@@ -51,6 +51,14 @@ class Tags(commands.Cog):
 
         await inter.respond(embed=embed)
 
+    @slash_command(name="tags", description="List of available tags.")
+    async def tags(self, inter):
+        tags = await load_tags_list()
+        embed = discord.Embed(color=inter.author.color,
+                              title="Tags", description="\n".join(tags))
+
+        await inter.respond(embed=embed, ephemeral=True)
+
 
 def setup(bot):
     bot.add_cog(Tags(bot))
