@@ -33,7 +33,7 @@ async def create_tag(tag, response):
 
     load[tag] = response
 
-    with open("tags.json", "w") as f:
+    with open("jsons/tags.json", "w") as f:
         json.dump(load, f, indent=4)
 
     return "created"
