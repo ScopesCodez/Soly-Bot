@@ -1,3 +1,4 @@
+import dislash
 from dislash import *
 import discord
 from discord.ext import commands
@@ -39,6 +40,22 @@ async def create_tag(tag, response):
     return "created"
 
 
+async def delete_tag(tag):
+    with open("jsons/tags.json", "r") as f:
+        load = json.load(f)
+
+    result = await get_tag(tag)
+    if result == "not found":
+        return "not found"
+
+    load.pop(tag)
+
+    with open("jsons/tags.json", "w") as f:
+        json.dump(load, f, indent=4)
+
+    return "deleted"
+
+
 class Tags(commands.Cog):
 
     def __init__(self, bot):
@@ -74,17 +91,28 @@ class Tags(commands.Cog):
 
         await inter.respond(embed=embed, ephemeral=True)
 
+    @dislash.has_permissions(administrator=True)
     @slash_command(name="create_tag", description="Create a new tag.", options=[
         Option("tag", "The tag's title.", Type.STRING, True),
         Option("response", "The tag's response.", Type.STRING, True)
     ])
-    @commands.has_permissions(administrator=True)
     async def create_tag(self, inter, tag, response):
         result = await create_tag(tag.lower(), response)
         if result == "exists":
             return await inter.respond("This tag already exists!", ephemeral=True)
         else:
             await inter.respond(f'Tag "**{tag}**" created!')
+
+    @dislash.has_permissions(administrator=True)
+    @slash_command(name="delete_tag", description="Delete an existing tag.", options=[
+        Option("tag", "The tag's title.", Type.STRING, True),
+    ])
+    async def create_tag(self, inter, tag):
+        result = await delete_tag(tag.lower())
+        if result == "not found":
+            return await inter.respond("This tag doesn't exists!", ephemeral=True)
+        else:
+            await inter.respond(f'Tag "**{tag}**" deleted!')
 
 
 def setup(bot):
