@@ -2,12 +2,14 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
+from dislash import *
 
 load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 
+inter_client = InteractionClient(bot, test_guilds=[881149182210093057])
 
 @bot.event
 async def on_ready():
