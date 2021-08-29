@@ -18,7 +18,7 @@ class Utilities(commands.Cog):
 
     @slash_command(name="source", description="Link to my source code!")
     async def source(self, inter):
-        await inter.respond("https://github.com/ScopesCodez/Soly-Bot")
+        await inter.respond("https://github.com/ScopesCodez/Soly-Bot", ephemeral=True)
 
 
 def setup(bot):
