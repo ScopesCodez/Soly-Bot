@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
+# We will use "dislash.py" package for slash commands and buttons.
 from dislash import *
 
 load_dotenv()

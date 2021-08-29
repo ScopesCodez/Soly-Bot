@@ -1,4 +1,3 @@
-# We will use "dislash.py" package for slash commands and buttons.
 from dislash import *
 import discord
 from discord.ext import commands
