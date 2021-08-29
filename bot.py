@@ -12,10 +12,11 @@ bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 
 inter_client = InteractionClient(bot, test_guilds=[881149182210093057])
 
+
 @bot.event
 async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Activity(
-        type=discord.ActivityType.listening, name="!help"
+        type=discord.ActivityType.listening, name="/ commands"
     ))
     print(f"Logged in as {bot.user}")
 
