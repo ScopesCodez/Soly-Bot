@@ -51,7 +51,10 @@ class VoteReminder(commands.Cog):
         users = load["users"]
         for user_id in users:
             user = self.bot.get_user(user_id)
-            await user.send("Time to vote for Scopes! https://scopes.cf/vote.html")
+            try:
+                await user.send("Time to vote for Scopes! https://scopes.cf/vote.html")
+            except:
+                continue
 
 
 def setup(bot):

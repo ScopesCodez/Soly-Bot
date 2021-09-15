@@ -18,15 +18,16 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Activity(
         type=discord.ActivityType.listening, name="/ commands"
     ))
-    print(f"Logged in as {bot.user}")
+    for cog in os.listdir(r"cogs"):
+        if cog.endswith(".py"):
+            try:
+                cog = f"cogs.{cog.replace('.py', '')}"
+                bot.load_extension(cog)
+                print(f"Loaded extension: {cog}")
+            except Exception as e:
+                print(f"{cog} is failed to load:")
+                raise e
 
-for cog in os.listdir(r"cogs"):
-    if cog.endswith(".py"):
-        try:
-            cog = f"cogs.{cog.replace('.py', '')}"
-            bot.load_extension(cog)
-        except Exception as e:
-            print(f"{cog} is failed to load:")
-            raise e
+    print(f"Logged in as {bot.user}")
 
 bot.run(TOKEN)
