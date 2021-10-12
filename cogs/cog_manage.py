@@ -1,10 +1,7 @@
 import discord
 from discord.ext import commands
 import os
-import random
 import asyncio
-import json
-
 
 class CogManagement(commands.Cog):
 
@@ -21,7 +18,7 @@ class CogManagement(commands.Cog):
                 timestamp=ctx.message.created_at
             )
             for ext in os.listdir("./cogs"):
-                if ext.endswith('.py') and not ext.startswith('_'):
+                if ext.endswith('.py') and ext[0] != '_':
                     try:
                         self.client.unload_extension(f'cogs.{ext[:-3]}')
                         self.client.load_extension(f'cogs.{ext[:-3]}')
