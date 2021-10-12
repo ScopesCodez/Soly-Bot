@@ -4,62 +4,51 @@ import discord
 from discord.ext import commands
 import json
 
-
 async def load_tags_list():
     with open("jsons/tags.json", "r") as f:
         load = json.load(f)
 
     return load.keys()
 
-
 async def get_tag(tag):
     with open("jsons/tags.json", "r") as f:
         load = json.load(f)
 
-    try:
-        response = load[tag]
-    except KeyError:
-        response = "not found"
-
-    return response
-
+    return load.get(tag)
 
 async def create_tag(tag, response):
     with open("jsons/tags.json", "r") as f:
         load = json.load(f)
 
-    result = await get_tag(tag)
-    if result != "not found":
-        return "exists"
+    result = load.get(tag)
+    if result is not None:
+        return True
 
     load[tag] = response
 
     with open("jsons/tags.json", "w") as f:
         json.dump(load, f, indent=4)
 
-    return "created"
-
+    return False
 
 async def delete_tag(tag):
     with open("jsons/tags.json", "r") as f:
         load = json.load(f)
 
-    result = await get_tag(tag)
-    if result == "not found":
-        return "not found"
+    result = load.get(tag)
+    if result is None:
+        return False
 
     load.pop(tag)
 
     with open("jsons/tags.json", "w") as f:
         json.dump(load, f, indent=4)
 
-    return "deleted"
-
+    return True
 
 class Tags(commands.Cog):
-
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self):
+        pass
 
     @slash_command(
         description="Got a question? Check if it there's a tag for it!",
@@ -71,11 +60,11 @@ class Tags(commands.Cog):
                    required=True
                    )
         ]
-
     )
+    
     async def tag(self, inter, tag):
         response = await get_tag(tag.lower())
-        if response == "not found":
+        if not response:
             return await inter.respond("Couldn't find the tag you are looking for! Use `/tags` to view a list of available tags.", ephemeral=True)
 
         embed = discord.Embed(color=inter.author.color,
@@ -96,9 +85,10 @@ class Tags(commands.Cog):
         Option("tag", "The tag's title.", Type.STRING, True),
         Option("response", "The tag's response.", Type.STRING, True)
     ])
+    
     async def create_tag(self, inter, tag, response):
         result = await create_tag(tag.lower(), response)
-        if result == "exists":
+        if result:
             return await inter.respond("This tag already exists!", ephemeral=True)
         else:
             await inter.respond(f'Tag "**{tag}**" created!')
@@ -109,11 +99,10 @@ class Tags(commands.Cog):
     ])
     async def create_tag(self, inter, tag):
         result = await delete_tag(tag.lower())
-        if result == "not found":
-            return await inter.respond("This tag doesn't exists!", ephemeral=True)
+        if not result:
+            return await inter.respond("This tag doesn't exist!", ephemeral=True)
         else:
             await inter.respond(f'Tag "**{tag}**" deleted!')
 
-
 def setup(bot):
-    bot.add_cog(Tags(bot))
+    bot.add_cog(Tags())

@@ -1,2 +1,3 @@
 *.env
 *jsons
+cogs/__pycache__/
